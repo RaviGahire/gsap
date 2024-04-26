@@ -3,43 +3,51 @@ import './scroll.css'
 import { gsap } from "gsap/dist/gsap"
 import { useGSAP } from '@gsap/react';
 import { ScrollTrigger } from "gsap/ScrollTrigger"
-
-gsap.registerPlugin(ScrollTrigger, useGSAP)
-
+gsap.registerPlugin(useGSAP, ScrollTrigger);
 const Scroll = () => {
     const main = useRef();
-    useGSAP(() => {
-        gsap.to(".box", {
-            x: 300, duration: 1.5,
+    useGSAP(
+        () => {
+            const boxes = gsap.utils.toArray('.box');
+            const boxes2 = gsap.utils.toArray('.boxs');
+            boxes.forEach((box) => {
+                gsap.to(box, {
+                    x: -50, y: -50,
+                    scrollTrigger: {
+                        trigger: box,
+                        start: 'bottom bottom',
+                        end: ' center center',
+                        scrub: true,
+                        markers: true,
+                    },
+                });
+            });
 
-            ScrollTrigger: {
-                trigger: ".box",
-                start: " top bottom",
-                end: "top 30%",
-                markers: true,
-            }
-        }
-
-
-
-        )
-    })
-
+            boxes2.forEach((box2) => {
+                gsap.to(box2, {
+                    x: 90,
+                    scrollTrigger: {
+                        trigger: box2,
+                        start: 'bottom bottom',
+                        end: '  center 100%',
+                        scrub: true,
+                        markers: true,
+                    },
+                });
+            });
+        },
+        { scope: main }
+    );
 
     return (
         <>
-
-            <div>
-                <section className="section flex-center column text-center">
-                    <h2>Basic ScrollTrigger with React</h2>
-                    <p>Scroll down to see the magic happen!!</p>
-                </section>
-                <div className="section flex-center column" ref={main}>
-                    <div className="box gradient-blue">box</div>
-                    <div className="box gradient-blue">box</div>
-                    <div className="box gradient-blue">box</div>
+            <div className="container border " ref={main}>
+                <div className="box mx-1"><span>Box-1</span></div>
+                <div className="box">Box-2</div>
+                <div className=" mx-2">
+                    <div className="boxs "><span>Box-3</span></div>
+                    <div className="boxs mt-1">Box-4</div>
                 </div>
-                <section className="section"></section>
             </div>
 
         </>
